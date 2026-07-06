@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order #{{ order['id'] }} — Royal Tee Admin</title>
+<link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<nav class="bg-[#0B2545] text-white px-6 lg:px-10 h-16 flex items-center justify-between sticky top-0 z-40 shadow-lg">
+  <span class="font-['Cormorant_Garamond'] text-xl">Royal Tee <span class="text-[#C9A24B]">Stitches</span> <span class="text-white/40 text-sm font-['Inter'] font-normal ml-2">Admin</span></span>
+  <div class="flex items-center gap-5 text-sm">
+    <a href="/admin/dashboard" class="text-white/70 hover:text-[#C9A24B] transition-colors">← All Orders</a>
+    <a href="/admin/change-password" class="text-white/70 hover:text-[#C9A24B] transition-colors">Change Password</a>
+    <a href="/admin/logout" class="bg-white/10 hover:bg-white/20 px-4 py-1.5 rounded transition-colors">Log Out</a>
+  </div>
+</nav>
+
+<main class="max-w-5xl mx-auto px-6 lg:px-10 py-10">
+
+  <!-- Flash messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in messages %}
+    <div class="mb-4 px-4 py-3 text-sm rounded border
+      {% if cat == 'success' %}bg-green-50 border-green-200 text-green-700{% else %}bg-red-50 border-red-200 text-red-700{% endif %}">
+      {{ msg }}
+    </div>
+    {% endfor %}
+  {% endwith %}
+
+  <!-- Header -->
+  <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
+    <div>
+      <h1 class="font-['Cormorant_Garamond'] text-4xl text-[#0B2545]">Order #{{ order['id'] }}</h1>
+      <p class="text-gray-500 text-sm mt-1">Submitted on {{ order['created_at'] }}</p>
+    </div>
+    <!-- Status update -->
+    <form method="POST" action="/admin/order/{{ order['id'] }}/status" class="flex items-center gap-2">
+      <select name="status" class="border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:border-[#C9A24B]">
+        {% for s in ['new','in-progress','completed','cancelled'] %}
+        <option value="{{ s }}" {% if order['status']==s %}selected{% endif %}>{{ s|title }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="bg-[#0B2545] text-white px-4 py-2 text-sm font-medium hover:bg-[#C9A24B] hover:text-[#0B2545] transition-colors">Update Status</button>
+    </form>
+  </div>
+
+  <div class="grid lg:grid-cols-3 gap-6">
+
+    <!-- Customer info + notes -->
+    <div class="lg:col-span-1 space-y-5">
+      <div class="bg-white border border-gray-100 shadow-sm p-6">
+        <h2 class="font-semibold text-[#0B2545] mb-4 pb-2 border-b border-[#C9A24B]/30 uppercase tracking-wide text-xs">Customer Information</h2>
+        <dl class="space-y-3 text-sm">
+          <div>
+            <dt class="text-gray-400 text-xs uppercase tracking-wide">Full Name</dt>
+            <dd class="font-semibold text-[#0B2545] mt-0.5">{{ order['full_name'] }}</dd>
+          </div>
+          <div>
+            <dt class="text-gray-400 text-xs uppercase tracking-wide">Phone</dt>
+            <dd class="font-semibold text-[#0B2545] mt-0.5">
+              <a href="tel:{{ order['phone'] }}" class="hover:text-[#C9A24B]">{{ order['phone'] }}</a>
+            </dd>
+          </div>
+          {% if order['order_date'] %}
+          <div>
+            <dt class="text-gray-400 text-xs uppercase tracking-wide">Preferred Date</dt>
+            <dd class="mt-0.5">{{ order['order_date'] }}</dd>
+          </div>
+          {% endif %}
+        </dl>
+      </div>
+
+      {% if order['notes'] %}
+      <div class="bg-amber-50 border border-amber-200 p-5">
+        <h2 class="font-semibold text-amber-800 mb-2 text-xs uppercase tracking-wide">Notes / Instructions</h2>
+        <p class="text-sm text-amber-900 leading-relaxed">{{ order['notes'] }}</p>
+      </div>
+      {% endif %}
+
+      <!-- Reference image -->
+      {% if image_url %}
+      <div class="bg-white border border-gray-100 shadow-sm p-5">
+        <h2 class="font-semibold text-[#0B2545] mb-3 text-xs uppercase tracking-wide">Reference Image</h2>
+        <img src="{{ image_url }}" alt="Reference image"
+             class="w-full rounded border border-gray-100 object-cover max-h-64">
+        <a href="{{ image_url }}" target="_blank"
+           class="inline-block mt-2 text-xs text-[#C9A24B] underline">Open full size ↗</a>
+      </div>
+      {% elif order['image_path'] %}
+      <div class="bg-white border border-gray-100 shadow-sm p-5">
+        <h2 class="font-semibold text-[#0B2545] mb-3 text-xs uppercase tracking-wide">Reference Image</h2>
+        <p class="text-xs text-gray-400 italic">Image was submitted but could not be located on disk.</p>
+      </div>
+      {% endif %}
+
+      <!-- Delete -->
+      <form method="POST" action="/admin/order/{{ order['id'] }}/delete"
+            onsubmit="return confirm('Permanently delete order #{{ order['id'] }}? This cannot be undone.')">
+        <button type="submit" class="w-full border border-red-300 text-red-600 text-sm py-2.5 hover:bg-red-50 transition-colors font-medium">
+          Delete Order
+        </button>
+      </form>
+    </div>
+
+    <!-- Measurements -->
+    <div class="lg:col-span-2 space-y-5">
+      {% for section_name, fields in sections.items() %}
+        {% set has_data = [] %}
+        {% for db_col, label in fields %}
+          {% if order[db_col] %}{% set _ = has_data.append(1) %}{% endif %}
+        {% endfor %}
+        {% if has_data %}
+        <div class="bg-white border border-gray-100 shadow-sm p-6">
+          <h2 class="font-['Cormorant_Garamond'] text-2xl text-[#0B2545] mb-4 pb-2 border-b-2 border-[#C9A24B]/40">
+            {{ section_name }} Measurements
+          </h2>
+          <div class="grid sm:grid-cols-2 gap-x-8 gap-y-3">
+            {% for db_col, label in fields %}
+              {% if order[db_col] %}
+              <div class="flex justify-between items-center py-1.5 border-b border-gray-50">
+                <span class="text-sm text-gray-500">{{ label }}</span>
+                <span class="text-sm font-bold text-[#0B2545]">{{ order[db_col] }}&Prime;</span>
+              </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      {% endfor %}
+
+      <!-- If absolutely no measurements given -->
+      {% set all_empty = true %}
+      {% for section_name, fields in sections.items() %}
+        {% for db_col, label in fields %}
+          {% if order[db_col] %}{% set all_empty = false %}{% endif %}
+        {% endfor %}
+      {% endfor %}
+      {% if all_empty %}
+      <div class="bg-white border border-gray-100 shadow-sm p-10 text-center text-gray-400 text-sm italic">
+        No measurements were provided for this order.
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+</main>
+</body>
+</html>

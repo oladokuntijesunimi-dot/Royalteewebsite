@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Place an Order — Royal Tee Stitches</title>
+<link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          royal:   { DEFAULT: '#0B2545', dark: '#081A33', light: '#13386B' },
+          gold:    { DEFAULT: '#C9A24B', light: '#E2C786', dark: '#9C7B30' },
+          ivory:   '#FAF7F1',
+          charcoal:'#221F1B',
+        },
+        fontFamily: {
+          display: ['"Cormorant Garamond"', 'serif'],
+          body: ['Inter', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
+<style>
+  body { font-family: 'Inter', sans-serif; background:#FAF7F1; color:#221F1B; }
+  h1,h2,h3,.font-display { font-family: 'Cormorant Garamond', serif; }
+
+  .stitch-divider { display:flex; align-items:center; gap:.5rem; }
+  .stitch-divider::before, .stitch-divider::after {
+    content:""; flex:1; height:0; border-top:2px dashed #C9A24B;
+  }
+
+  .tab-btn { transition: all .25s ease; }
+  .tab-btn.active {
+    background:#0B2545; color:#FAF7F1; border-color:#0B2545;
+  }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; animation: fadeIn .35s ease; }
+  @keyframes fadeIn { from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .field label { font-size:.72rem; letter-spacing:.04em; text-transform:uppercase; color:#0B2545; font-weight:600; }
+  .field input, .field textarea {
+    border:1px solid #D8CFBF; background:#fff; padding:.65rem .85rem; width:100%;
+    font-size:.92rem; color:#221F1B; transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  .field input:focus, .field textarea:focus {
+    outline:none; border-color:#C9A24B; box-shadow:0 0 0 3px rgba(201,162,75,.18);
+  }
+  .req::after{ content:" *"; color:#9C2B2B; }
+
+  .upload-zone { border:2px dashed #C9A24B; }
+
+  #toast { transition: opacity .4s ease, transform .4s ease; }
+</style>
+</head>
+<body class="antialiased">
+
+<header class="bg-royal-dark">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between h-20">
+    <a href="/" class="font-display text-2xl tracking-wide text-ivory">Royal Tee <span class="text-gold">Stitches</span></a>
+    <a href="/" class="text-ivory/70 hover:text-gold text-sm uppercase tracking-wide transition-colors">← Back Home</a>
+  </div>
+</header>
+
+<section class="bg-royal-dark pb-20 pt-6 text-center px-6">
+  <p class="stitch-divider text-gold text-xs uppercase tracking-[0.3em] mb-3 max-w-xs mx-auto"><span class="px-3">Order Form</span></p>
+  <h1 class="font-display text-4xl md:text-5xl text-ivory">Tell Us Your Measurements</h1>
+  <p class="text-ivory/70 mt-3 max-w-xl mx-auto text-sm">All measurements should be entered in inches. Fill only the sections relevant to your order.</p>
+</section>
+
+<main class="max-w-5xl mx-auto px-6 lg:px-10 -mt-12 pb-28">
+  <form id="orderForm" action="/submit-order" method="POST" enctype="multipart/form-data"
+        class="bg-white shadow-2xl border border-gold/30">
+
+    <!-- CUSTOMER INFO -->
+    <div class="p-8 md:p-12 border-b border-gold/20">
+      <h2 class="font-display text-3xl text-royal mb-8">Customer Information</h2>
+      <div class="grid sm:grid-cols-2 gap-6">
+        <div class="field">
+          <label class="req">Full Name</label>
+          <input type="text" name="full_name" required placeholder="e.g. Adaeze Okafor">
+        </div>
+        <div class="field">
+          <label class="req">Phone Number</label>
+          <input type="tel" name="phone_number" required placeholder="e.g. 0803 000 0000">
+        </div>
+        <div class="field">
+          <label>Date</label>
+          <input type="date" name="order_date">
+        </div>
+        <div class="field">
+          <label>Reference Image</label>
+          <div class="upload-zone bg-ivory px-4 py-3">
+            <input type="file" name="reference_image" accept="image/*" class="w-full text-sm">
+          </div>
+          <p class="text-xs text-charcoal/50 mt-1">Upload a style photo for inspiration (optional).</p>
+        </div>
+        <div class="field sm:col-span-2">
+          <label>Notes / Special Instructions</label>
+          <textarea name="notes" rows="4" placeholder="Style preferences, fabric notes, deadline, etc."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEASUREMENT TABS -->
+    <div class="p-8 md:p-12">
+      <h2 class="font-display text-3xl text-royal mb-2">Measurements</h2>
+      <p class="text-sm text-charcoal/60 mb-6">All fields in inches. Switch tabs for each garment type.</p>
+
+      <div class="flex flex-wrap gap-2 mb-8" role="tablist">
+        <button type="button" data-tab="blouse" class="tab-btn active border border-royal px-5 py-2.5 text-xs uppercase tracking-wider font-semibold">Blouse</button>
+        <button type="button" data-tab="skirt" class="tab-btn border border-royal px-5 py-2.5 text-xs uppercase tracking-wider font-semibold text-royal">Skirt</button>
+        <button type="button" data-tab="gown" class="tab-btn border border-royal px-5 py-2.5 text-xs uppercase tracking-wider font-semibold text-royal">Gown</button>
+        <button type="button" data-tab="trouser" class="tab-btn border border-royal px-5 py-2.5 text-xs uppercase tracking-wider font-semibold text-royal">Trouser</button>
+      </div>
+
+      <!-- BLOUSE -->
+      <div id="panel-blouse" class="tab-panel active">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="field"><label>Back (in)</label><input type="text" name="blouse_back" inputmode="decimal"></div>
+          <div class="field"><label>Full Length (in)</label><input type="text" name="blouse_full_length" inputmode="decimal"></div>
+          <div class="field"><label>Bust (in)</label><input type="text" name="blouse_bust" inputmode="decimal"></div>
+          <div class="field"><label>Chest (in)</label><input type="text" name="blouse_chest" inputmode="decimal"></div>
+          <div class="field"><label>Round Waist (in)</label><input type="text" name="blouse_round_waist" inputmode="decimal"></div>
+          <div class="field"><label>Waist Under Bust (in)</label><input type="text" name="blouse_waist_under_bust" inputmode="decimal"></div>
+          <div class="field"><label>Bust Point (in)</label><input type="text" name="blouse_bust_point" inputmode="decimal"></div>
+          <div class="field"><label>N–N, Nipple to Nipple (in)</label><input type="text" name="blouse_nn" inputmode="decimal"></div>
+          <div class="field"><label>Half Length (in)</label><input type="text" name="blouse_half_length" inputmode="decimal"></div>
+          <div class="field"><label>Sleeve Length (in)</label><input type="text" name="blouse_sleeve_length" inputmode="decimal"></div>
+          <div class="field"><label>Round Sleeve (in)</label><input type="text" name="blouse_round_sleeve" inputmode="decimal"></div>
+        </div>
+      </div>
+
+      <!-- SKIRT -->
+      <div id="panel-skirt" class="tab-panel">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="field"><label>Length (in)</label><input type="text" name="skirt_length" inputmode="decimal"></div>
+          <div class="field"><label>Hip (in)</label><input type="text" name="skirt_hip" inputmode="decimal"></div>
+          <div class="field"><label>Waist (in)</label><input type="text" name="skirt_waist" inputmode="decimal"></div>
+        </div>
+      </div>
+
+      <!-- GOWN -->
+      <div id="panel-gown" class="tab-panel">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="field"><label>Bust (in)</label><input type="text" name="gown_bust" inputmode="decimal"></div>
+          <div class="field"><label>Under-Bust (in)</label><input type="text" name="gown_under_bust" inputmode="decimal"></div>
+          <div class="field"><label>Waist (in)</label><input type="text" name="gown_waist" inputmode="decimal"></div>
+          <div class="field"><label>Hip (in)</label><input type="text" name="gown_hip" inputmode="decimal"></div>
+          <div class="field"><label>Back (in)</label><input type="text" name="gown_back" inputmode="decimal"></div>
+          <div class="field"><label>Shoulder to Bust Pt (in)</label><input type="text" name="gown_shoulder_to_bust_pt" inputmode="decimal"></div>
+          <div class="field"><label>Nipple to Nipple (in)</label><input type="text" name="gown_nn" inputmode="decimal"></div>
+          <div class="field"><label>Half Length (in)</label><input type="text" name="gown_half_length" inputmode="decimal"></div>
+          <div class="field"><label>Round Waist (in)</label><input type="text" name="gown_round_waist" inputmode="decimal"></div>
+          <div class="field"><label>Gown Length (in)</label><input type="text" name="gown_length" inputmode="decimal"></div>
+          <div class="field"><label>Sleeve (in)</label><input type="text" name="gown_sleeve" inputmode="decimal"></div>
+          <div class="field"><label>Round Sleeve (in)</label><input type="text" name="gown_round_sleeve" inputmode="decimal"></div>
+        </div>
+      </div>
+
+      <!-- TROUSER -->
+      <div id="panel-trouser" class="tab-panel">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="field"><label>Waist (in)</label><input type="text" name="trouser_waist" inputmode="decimal"></div>
+          <div class="field"><label>Hip (in)</label><input type="text" name="trouser_hip" inputmode="decimal"></div>
+          <div class="field"><label>Thigh / Lap (in)</label><input type="text" name="trouser_thigh" inputmode="decimal"></div>
+          <div class="field"><label>Knee (in)</label><input type="text" name="trouser_knee" inputmode="decimal"></div>
+          <div class="field"><label>Length (in)</label><input type="text" name="trouser_length" inputmode="decimal"></div>
+          <div class="field"><label>Bottom (in)</label><input type="text" name="trouser_bottom" inputmode="decimal"></div>
+          <div class="field"><label>Tight (in)</label><input type="text" name="trouser_tight" inputmode="decimal"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="bg-ivory px-8 md:px-12 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gold/20">
+      <p class="text-xs text-charcoal/50 max-w-sm">By submitting, your order details are sent directly to our tailoring team for review and a confirmation call.</p>
+      <button type="submit" id="submitBtn"
+        class="bg-royal text-ivory font-semibold uppercase tracking-wider text-sm px-10 py-4 hover:bg-gold hover:text-royal-dark transition-colors duration-300 whitespace-nowrap">
+        Submit Order
+      </button>
+    </div>
+  </form>
+</main>
+
+<div id="toast" class="hidden fixed bottom-6 right-6 z-50 max-w-sm bg-royal text-ivory px-6 py-4 shadow-2xl border-l-4 border-gold"></div>
+
+<footer class="bg-royal-dark text-ivory/40 text-xs text-center py-8">
+  © 2026 Royal Tee Stitches. All rights reserved.
+</footer>
+
+<script>
+  // Tabs
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => { b.classList.remove('active'); b.classList.add('text-royal'); });
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      btn.classList.remove('text-royal');
+      document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // AJAX submit with toast feedback
+  const form = document.getElementById('orderForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const toast = document.getElementById('toast');
+
+  function showToast(message, isError) {
+    toast.textContent = message;
+    toast.classList.remove('hidden');
+    toast.style.borderColor = isError ? '#9C2B2B' : '#C9A24B';
+    toast.style.opacity = 1;
+    setTimeout(() => {
+      toast.style.opacity = 0;
+      setTimeout(() => toast.classList.add('hidden'), 400);
+    }, 5000);
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting…';
+
+    try {
+      const res = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok) {
+        showToast('Order received! We will reach out shortly to confirm.', false);
+        form.reset();
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('panel-blouse').classList.add('active');
+        tabBtns.forEach(b => { b.classList.remove('active'); b.classList.add('text-royal'); });
+        tabBtns[0].classList.add('active');
+        tabBtns[0].classList.remove('text-royal');
+      } else {
+        showToast(data.message || 'Something went wrong. Please try again.', true);
+      }
+    } catch (err) {
+      showToast('Network error — please check your connection and try again.', true);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Order';
+    }
+  });
+</script>
+</body>
+</html>

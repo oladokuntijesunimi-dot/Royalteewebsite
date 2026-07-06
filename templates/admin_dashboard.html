@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Royal Tee Stitches Admin</title>
+<link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: 'Inter', sans-serif; }
+  .badge-new       { background:#FEF3C7; color:#92400E; }
+  .badge-in-progress { background:#DBEAFE; color:#1E40AF; }
+  .badge-completed { background:#D1FAE5; color:#065F46; }
+  .badge-cancelled { background:#FEE2E2; color:#991B1B; }
+</style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<!-- Top nav -->
+<nav class="bg-[#0B2545] text-white px-6 lg:px-10 h-16 flex items-center justify-between sticky top-0 z-40 shadow-lg">
+  <span class="font-['Cormorant_Garamond'] text-xl">Royal Tee <span class="text-[#C9A24B]">Stitches</span> <span class="text-white/40 text-sm font-['Inter'] font-normal ml-2">Admin</span></span>
+  <div class="flex items-center gap-5 text-sm">
+    <a href="/admin/change-password" class="text-white/70 hover:text-[#C9A24B] transition-colors">Change Password</a>
+    <a href="/admin/logout" class="bg-white/10 hover:bg-white/20 px-4 py-1.5 rounded transition-colors">Log Out</a>
+  </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-6 lg:px-10 py-10">
+
+  <!-- Stats -->
+  <div class="grid sm:grid-cols-3 gap-5 mb-10">
+    <div class="bg-white border border-gray-100 shadow-sm p-6 flex items-center gap-4">
+      <div class="w-12 h-12 bg-[#0B2545]/10 rounded-full flex items-center justify-center text-[#0B2545] font-bold text-lg">{{ total }}</div>
+      <div><p class="text-xs uppercase tracking-wide text-gray-400">Total Orders</p><p class="font-semibold text-[#0B2545] text-lg">{{ total }}</p></div>
+    </div>
+    <div class="bg-white border border-gray-100 shadow-sm p-6 flex items-center gap-4">
+      <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-700 font-bold text-lg">{{ new_count }}</div>
+      <div><p class="text-xs uppercase tracking-wide text-gray-400">New / Unread</p><p class="font-semibold text-yellow-700 text-lg">{{ new_count }}</p></div>
+    </div>
+    <div class="bg-white border border-gray-100 shadow-sm p-6 flex items-center gap-4">
+      <div class="w-12 h-12 bg-[#C9A24B]/15 rounded-full flex items-center justify-center">
+        <span class="font-['Cormorant_Garamond'] text-[#C9A24B] text-xl font-bold">RTS</span>
+      </div>
+      <div><p class="text-xs uppercase tracking-wide text-gray-400">Location</p><p class="font-semibold text-[#0B2545]">Bodija, Ibadan</p></div>
+    </div>
+  </div>
+
+  <!-- Flash messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in messages %}
+    <div class="mb-4 px-4 py-3 text-sm rounded border
+      {% if cat == 'success' %}bg-green-50 border-green-200 text-green-700{% else %}bg-red-50 border-red-200 text-red-700{% endif %}">
+      {{ msg }}
+    </div>
+    {% endfor %}
+  {% endwith %}
+
+  <!-- Search & filter bar -->
+  <form method="GET" action="/admin/dashboard" class="flex flex-wrap gap-3 mb-6">
+    <input type="text" name="q" value="{{ search }}" placeholder="Search by name or phone…"
+           class="border border-gray-200 px-4 py-2 text-sm focus:outline-none focus:border-[#C9A24B] w-64">
+    <select name="status" class="border border-gray-200 px-4 py-2 text-sm focus:outline-none focus:border-[#C9A24B]">
+      <option value="">All Statuses</option>
+      <option value="new"         {% if status_filter=='new' %}selected{% endif %}>New</option>
+      <option value="in-progress" {% if status_filter=='in-progress' %}selected{% endif %}>In Progress</option>
+      <option value="completed"   {% if status_filter=='completed' %}selected{% endif %}>Completed</option>
+      <option value="cancelled"   {% if status_filter=='cancelled' %}selected{% endif %}>Cancelled</option>
+    </select>
+    <button type="submit" class="bg-[#0B2545] text-white px-5 py-2 text-sm font-medium hover:bg-[#C9A24B] hover:text-[#0B2545] transition-colors">Filter</button>
+    {% if search or status_filter %}
+    <a href="/admin/dashboard" class="px-5 py-2 text-sm border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors">Clear</a>
+    {% endif %}
+  </form>
+
+  <!-- Orders table -->
+  {% if orders %}
+  <div class="bg-white border border-gray-100 shadow-sm overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead class="bg-[#0B2545] text-white">
+        <tr>
+          <th class="px-4 py-3 text-left font-semibold uppercase tracking-wide text-xs">#</th>
+          <th class="px-4 py-3 text-left font-semibold uppercase tracking-wide text-xs">Date</th>
+          <th class="px-4 py-3 text-left font-semibold uppercase tracking-wide text-xs">Customer</th>
+          <th class="px-4 py-3 text-left font-semibold uppercase tracking-wide text-xs">Phone</th>
+          <th class="px-4 py-3 text-left font-semibold uppercase tracking-wide text-xs">Garments Ordered</th>
+          <th class="px-4 py-3 text-left font-semibold uppercase tracking-wide text-xs">Status</th>
+          <th class="px-4 py-3 text-left font-semibold uppercase tracking-wide text-xs">Image</th>
+          <th class="px-4 py-3 text-left font-semibold uppercase tracking-wide text-xs">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        {% for o in orders %}
+        {% set garments = [] %}
+        {% if o['bl_bust'] or o['bl_back'] %}{% set _ = garments.append('Blouse') %}{% endif %}
+        {% if o['sk_waist'] or o['sk_hip'] %}{% set _ = garments.append('Skirt') %}{% endif %}
+        {% if o['gw_bust'] or o['gw_length'] %}{% set _ = garments.append('Gown') %}{% endif %}
+        {% if o['tr_waist'] or o['tr_length'] %}{% set _ = garments.append('Trouser') %}{% endif %}
+        <tr class="hover:bg-gray-50 transition-colors {% if o['status']=='new' %}bg-yellow-50/40{% endif %}">
+          <td class="px-4 py-3 text-gray-400 font-mono">{{ o['id'] }}</td>
+          <td class="px-4 py-3 text-gray-600 whitespace-nowrap">{{ o['created_at'][:10] }}</td>
+          <td class="px-4 py-3 font-semibold text-[#0B2545]">{{ o['full_name'] }}</td>
+          <td class="px-4 py-3 text-gray-600">{{ o['phone'] }}</td>
+          <td class="px-4 py-3">
+            {% if garments %}
+              {% for g in garments %}
+              <span class="inline-block bg-[#0B2545]/10 text-[#0B2545] text-xs px-2 py-0.5 rounded mr-1">{{ g }}</span>
+              {% endfor %}
+            {% else %}
+            <span class="text-gray-400 italic text-xs">—</span>
+            {% endif %}
+          </td>
+          <td class="px-4 py-3">
+            <span class="text-xs font-semibold px-2 py-1 rounded badge-{{ o['status'] }}">{{ o['status']|title }}</span>
+          </td>
+          <td class="px-4 py-3">
+            {% if o['image_path'] %}
+            <span class="text-[#C9A24B] text-xs font-medium">📎 Yes</span>
+            {% else %}
+            <span class="text-gray-300 text-xs">—</span>
+            {% endif %}
+          </td>
+          <td class="px-4 py-3">
+            <div class="flex items-center gap-2">
+              <a href="/admin/order/{{ o['id'] }}"
+                 class="inline-block bg-[#0B2545] text-white text-xs font-semibold px-3 py-1.5 hover:bg-[#C9A24B] hover:text-[#0B2545] transition-colors">
+                View
+              </a>
+              <form method="POST" action="/admin/order/{{ o['id'] }}/delete"
+                    onsubmit="return confirm('Delete order #{{ o['id'] }} for {{ o['full_name'] }}? This cannot be undone.')">
+                <button type="submit"
+                        class="inline-block border border-red-300 text-red-500 text-xs font-semibold px-3 py-1.5 hover:bg-red-50 transition-colors">
+                  Delete
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="bg-white border border-gray-100 shadow-sm py-20 text-center">
+    <p class="text-gray-400 text-sm">No orders found{% if search or status_filter %} for your current filter{% endif %}.</p>
+    {% if search or status_filter %}
+    <a href="/admin/dashboard" class="inline-block mt-4 text-[#0B2545] underline text-sm">Clear filters</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</main>
+</body>
+</html>

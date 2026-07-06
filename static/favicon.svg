@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Royal Tee Stitches logo">
+  <rect width="64" height="64" rx="16" fill="#0B2545"/>
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="none" stroke="#C9A24B" stroke-width="3"/>
+  <path d="M20 18h12c6 0 10 3 10 8.5 0 3.8-2.4 6.5-5.7 7.6L38 46H32l-8-12H24v12H20V18Zm4 4v10h8c3.5 0 6-2.2 6-5.2 0-3.1-2.3-4.8-6-4.8h-8Z" fill="#FAF7F1"/>
+</svg>

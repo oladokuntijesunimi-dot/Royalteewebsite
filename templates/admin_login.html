@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login — Royal Tee Stitches</title>
+<link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      colors: { royal: '#0B2545', gold: '#C9A24B', ivory: '#FAF7F1', charcoal: '#221F1B' },
+      fontFamily: { display: ['"Cormorant Garamond"', 'serif'], body: ['Inter','sans-serif'] }
+    }}
+  }
+</script>
+</head>
+<body class="bg-[#0B2545] min-h-screen flex items-center justify-center font-[Inter]">
+  <div class="w-full max-w-sm mx-4">
+    <div class="text-center mb-8">
+      <p class="font-[Cormorant_Garamond] text-3xl text-white">Royal Tee <span class="text-[#C9A24B]">Stitches</span></p>
+      <p class="text-white/50 text-xs uppercase tracking-[0.25em] mt-1">Admin Portal</p>
+    </div>
+
+    <div class="bg-white p-8 shadow-2xl border-t-4 border-[#C9A24B]">
+      {% if error %}
+      <div class="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 mb-5 rounded">
+        {{ error }}
+      </div>
+      {% endif %}
+
+      <form method="POST" action="/admin">
+        <label class="block text-xs font-semibold uppercase tracking-wide text-[#0B2545] mb-1">Password</label>
+        <input type="password" name="password" required autofocus
+               class="w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-[#C9A24B] focus:ring-2 focus:ring-[#C9A24B]/20 mb-5"
+               placeholder="Enter admin password">
+        <button type="submit"
+                class="w-full bg-[#0B2545] text-white font-semibold uppercase tracking-wider text-sm py-3 hover:bg-[#C9A24B] hover:text-[#0B2545] transition-colors duration-300">
+          Sign In
+        </button>
+      </form>
+    </div>
+
+    <p class="text-center text-white/30 text-xs mt-6">© 2026 Royal Tee Stitches · Bodija, Ibadan</p>
+  </div>
+</body>
+</html>

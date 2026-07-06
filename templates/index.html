@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Royal Tee Stitches — Bespoke Nigerian Fashion</title>
+<meta name="description" content="Royal Tee Stitches: premium bespoke Nigerian tailoring — Ankara, Aso Ebi, Agbada & corporate wear, cut and stitched to perfection.">
+<link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          royal:   { DEFAULT: '#0B2545', dark: '#081A33', light: '#13386B' },
+          gold:    { DEFAULT: '#C9A24B', light: '#E2C786', dark: '#9C7B30' },
+          ivory:   '#FAF7F1',
+          charcoal:'#221F1B',
+        },
+        fontFamily: {
+          display: ['"Cormorant Garamond"', 'serif'],
+          body: ['Inter', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
+<style>
+  body { font-family: 'Inter', sans-serif; background:#FAF7F1; color:#221F1B; }
+  h1,h2,h3,.font-display { font-family: 'Cormorant Garamond', serif; }
+
+  /* Stitch-line signature motif */
+  .stitch-line {
+    border: none;
+    height: 0;
+    border-top: 2px dashed #C9A24B;
+    opacity: .8;
+  }
+  .stitch-divider {
+    display:flex; align-items:center; gap:.5rem;
+  }
+  .stitch-divider::before, .stitch-divider::after {
+    content:""; flex:1; height:0; border-top:2px dashed #C9A24B;
+  }
+
+  .seam-card { position:relative; }
+  .seam-card::after{
+    content:"";
+    position:absolute; inset:10px;
+    border:1.5px dashed rgba(201,162,75,.55);
+    pointer-events:none;
+  }
+
+  .gallery-item { position:relative; overflow:hidden; }
+  .gallery-item img { transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+  .gallery-item:hover img { transform: scale(1.08); }
+  .gallery-overlay {
+    position:absolute; inset:0;
+    background: linear-gradient(to top, rgba(11,37,69,.92) 0%, rgba(11,37,69,.15) 55%, transparent 100%);
+    display:flex; align-items:flex-end; padding:1.25rem;
+    opacity:0; transition: opacity .4s ease;
+  }
+  .gallery-item:hover .gallery-overlay { opacity:1; }
+
+  .nav-link { position:relative; }
+  .nav-link::after{
+    content:""; position:absolute; left:0; bottom:-4px; width:0; height:1px; background:#C9A24B;
+    transition:width .3s ease;
+  }
+  .nav-link:hover::after{ width:100%; }
+
+  .site-logo {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:3rem;
+    height:3rem;
+    border-radius:9999px;
+    background:linear-gradient(135deg, #0B2545 0%, #13386B 100%);
+    color:#FAF7F1;
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.35rem;
+    font-weight:700;
+    letter-spacing:0.04em;
+    border:2px solid #C9A24B;
+    box-shadow:0 8px 24px rgba(11,37,69,.18);
+  }
+
+  ::selection { background:#C9A24B; color:#0B2545; }
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- NAV -->
+<header class="fixed top-0 inset-x-0 z-50 bg-ivory/90 backdrop-blur-md border-b border-gold/30">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between h-20">
+    <a href="/" class="flex items-center gap-3">
+      <span class="site-logo" aria-label="Royal Tee Stitches logo">R</span>
+      <span class="font-display text-xl sm:text-2xl tracking-wide text-royal">Royal Tee <span class="text-gold">Stitches</span></span>
+    </a>
+    <nav class="hidden md:flex items-center gap-10 text-sm font-medium tracking-wide uppercase text-charcoal">
+      <a href="#about" class="nav-link">About</a>
+      <a href="#gallery" class="nav-link">Gallery</a>
+      <a href="#styles" class="nav-link">Styles</a>
+      <a href="/order" class="nav-link">Order</a>
+    </nav>
+    <a href="/order" class="hidden md:inline-flex items-center bg-royal text-ivory text-sm font-semibold uppercase tracking-wider px-6 py-3 hover:bg-gold hover:text-royal transition-colors duration-300">
+      Place an Order
+    </a>
+    <button id="menuBtn" class="md:hidden text-royal" aria-label="Open menu">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+  <div id="mobileMenu" class="hidden md:hidden bg-ivory border-t border-gold/30 px-6 py-4 space-y-4 text-sm uppercase tracking-wide">
+    <a href="#about" class="block">About</a>
+    <a href="#gallery" class="block">Gallery</a>
+    <a href="#styles" class="block">Styles</a>
+    <a href="/order" class="block font-semibold text-royal">Place an Order →</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="relative h-screen min-h-[640px] flex items-end overflow-hidden">
+  <img src="https://images.pexels.com/photos/31485722/pexels-photo-31485722.jpeg?auto=compress&cs=tinysrgb&w=1920&q=80"
+       alt="Regal Nigerian man in stunning traditional Agbada — portrait of elegance"
+       class="absolute inset-0 w-full h-full object-cover object-top">
+  <div class="absolute inset-0 bg-gradient-to-t from-royal-dark via-royal-dark/60 to-royal-dark/20"></div>
+  <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 pb-24 w-full">
+    <p class="uppercase tracking-[0.35em] text-gold text-xs md:text-sm mb-5">Bodija, Ibadan · Bespoke Atelier</p>
+    <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl text-ivory leading-[1.05] max-w-3xl">
+      Bespoke Nigerian Fashion,<br> Tailored to Perfection
+    </h1>
+    <p class="text-ivory/80 mt-6 max-w-xl text-base md:text-lg">
+      From Ankara to Agbada, every seam at Royal Tee Stitches is cut to your exact measurements — heritage craftsmanship, finished with a modern, royal touch.
+    </p>
+    <div class="mt-10 flex flex-wrap gap-4">
+      <a href="/order" class="bg-gold text-royal-dark font-semibold uppercase tracking-wider text-sm px-8 py-4 hover:bg-ivory transition-colors duration-300">
+        Place an Order
+      </a>
+      <a href="#gallery" class="border border-ivory/50 text-ivory font-semibold uppercase tracking-wider text-sm px-8 py-4 hover:border-gold hover:text-gold transition-colors duration-300">
+        View Gallery
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="py-24 md:py-32 bg-ivory">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 grid md:grid-cols-2 gap-14 items-center">
+    <div class="relative">
+      <div class="seam-card">
+        <img src="https://images.pexels.com/photos/3965543/pexels-photo-3965543.jpeg?auto=compress&cs=tinysrgb&w=1000&q=80"
+             alt="Rolls of rich fabrics inside a Nigerian tailoring atelier" class="w-full h-[460px] object-cover">
+      </div>
+      <div class="hidden sm:block absolute -bottom-8 -right-8 bg-royal text-ivory px-8 py-6 max-w-[220px] shadow-xl">
+        <p class="font-display text-4xl text-gold">12+</p>
+        <p class="text-xs uppercase tracking-widest mt-1">Years perfecting Nigerian craftsmanship</p>
+      </div>
+    </div>
+    <div>
+      <p class="stitch-divider text-gold text-xs uppercase tracking-[0.3em] mb-2">
+        <span class="px-3">Our Story</span>
+      </p>
+      <h2 class="font-display text-4xl md:text-5xl text-royal leading-tight mb-6">
+        Where Heritage Meets the Needle
+      </h2>
+      <p class="text-charcoal/80 leading-relaxed mb-5">
+        Royal Tee Stitches began as a single sewing table in Bodija, Ibadan, built on a simple promise: every garment should fit like it was made for one person — because it was. Today, we marry traditional Nigerian textile artistry with contemporary tailoring techniques, crafting Ankara, Aso Ebi, Agbada and corporate wear for clients who refuse to compromise on fit or finish.
+      </p>
+      <p class="text-charcoal/80 leading-relaxed mb-8">
+        Every order travels through the same disciplined process: precise measurement, hand-selected fabric, and a final fitting overseen by our master tailors before it ever leaves the atelier.
+      </p>
+      <div class="grid grid-cols-3 gap-6 border-t border-gold/30 pt-6">
+        <div>
+          <p class="font-display text-3xl text-royal">100%</p>
+          <p class="text-xs uppercase tracking-wide text-charcoal/60 mt-1">Made to Measure</p>
+        </div>
+        <div>
+          <p class="font-display text-3xl text-royal">2,500+</p>
+          <p class="text-xs uppercase tracking-wide text-charcoal/60 mt-1">Garments Delivered</p>
+        </div>
+        <div>
+          <p class="font-display text-3xl text-royal">4.9★</p>
+          <p class="text-xs uppercase tracking-wide text-charcoal/60 mt-1">Client Rating</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" class="py-24 md:py-32 bg-royal-dark">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="text-center mb-16">
+      <p class="stitch-divider text-gold text-xs uppercase tracking-[0.3em] mb-3 max-w-xs mx-auto">
+        <span class="px-3">Portfolio</span>
+      </p>
+      <h2 class="font-display text-4xl md:text-5xl text-ivory">Crafted For Every Occasion</h2>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-1">
+      <!-- 1 Ankara -->
+      <div class="gallery-item h-72">
+        <img src="https://images.pexels.com/photos/31826854/pexels-photo-31826854.jpeg?auto=compress&cs=tinysrgb&w=800&q=80" alt="Nigerian woman in richly patterned traditional Ankara attire" class="w-full h-full object-cover object-top">
+        <div class="gallery-overlay"><div><p class="text-gold text-xs uppercase tracking-widest">Category</p><p class="text-ivory font-display text-xl">Ankara</p></div></div>
+      </div>
+      <!-- 2 Aso Ebi group -->
+      <div class="gallery-item h-72 lg:col-span-2">
+        <img src="https://images.pexels.com/photos/33489952/pexels-photo-33489952.jpeg?auto=compress&cs=tinysrgb&w=1200&q=80" alt="Five Nigerian women in vibrant Aso Ebi coordination outfits" class="w-full h-full object-cover">
+        <div class="gallery-overlay"><div><p class="text-gold text-xs uppercase tracking-widest">Category</p><p class="text-ivory font-display text-xl">Aso Ebi</p></div></div>
+      </div>
+      <!-- 3 Agbada -->
+      <div class="gallery-item h-72">
+        <img src="https://images.pexels.com/photos/31485635/pexels-photo-31485635.jpeg?auto=compress&cs=tinysrgb&w=800&q=80" alt="Young Nigerian man in striking maroon embroidered Agbada, Abuja" class="w-full h-full object-cover object-top">
+        <div class="gallery-overlay"><div><p class="text-gold text-xs uppercase tracking-widest">Category</p><p class="text-ivory font-display text-xl">Agbada</p></div></div>
+      </div>
+
+      <!-- 4 Kids Gown -->
+      <div class="gallery-item h-72">
+        <img src="https://images.pexels.com/photos/31589058/pexels-photo-31589058.jpeg?auto=compress&cs=tinysrgb&w=800&q=80" alt="Adorable African girl in a sparkling pink sequined ball dress, beaming with joy" class="w-full h-full object-cover object-top">
+        <div class="gallery-overlay"><div><p class="text-gold text-xs uppercase tracking-widest">Category</p><p class="text-ivory font-display text-xl">Kids' Gowns</p></div></div>
+      </div>
+      <!-- 5 Corporate wear -->
+      <div class="gallery-item h-72">
+        <img src="https://images.pexels.com/photos/3869652/pexels-photo-3869652.jpeg?auto=compress&cs=tinysrgb&w=800&q=80" alt="Professional African woman in smart corporate wear" class="w-full h-full object-cover">
+        <div class="gallery-overlay"><div><p class="text-gold text-xs uppercase tracking-widest">Category</p><p class="text-ivory font-display text-xl">Corporate Wear</p></div></div>
+      </div>
+      <!-- 6 Traditional gown -->
+      <div class="gallery-item h-72">
+        <img src="https://images.pexels.com/photos/31826828/pexels-photo-31826828.jpeg?auto=compress&cs=tinysrgb&w=800&q=80" alt="Elegant Nigerian woman in rich traditional clothing" class="w-full h-full object-cover object-top">
+        <div class="gallery-overlay"><div><p class="text-gold text-xs uppercase tracking-widest">Category</p><p class="text-ivory font-display text-xl">Traditional Gowns</p></div></div>
+      </div>
+      <!-- 7 Purple gown -->
+      <div class="gallery-item h-72">
+        <img src="https://images.pexels.com/photos/37340982/pexels-photo-37340982.jpeg?auto=compress&cs=tinysrgb&w=800&q=80" alt="Elegant Nigerian woman in vibrant purple Aso Oke gown outdoors" class="w-full h-full object-cover object-top">
+        <div class="gallery-overlay"><div><p class="text-gold text-xs uppercase tracking-widest">Category</p><p class="text-ivory font-display text-xl">Aso Oke</p></div></div>
+      </div>
+
+      <!-- 8 Ankara street style (wide) -->
+      <div class="gallery-item h-72 sm:col-span-2 lg:col-span-1">
+        <img src="https://images.pexels.com/photos/36242799/pexels-photo-36242799.jpeg?auto=compress&cs=tinysrgb&w=800&q=80" alt="Nigerian woman in vibrant traditional attire at an outdoor event" class="w-full h-full object-cover object-top">
+        <div class="gallery-overlay"><div><p class="text-gold text-xs uppercase tracking-widest">Category</p><p class="text-ivory font-display text-xl">Owambe</p></div></div>
+      </div>
+      <!-- 9 Senator / Men's native -->
+      <div class="gallery-item h-72">
+        <img src="https://images.pexels.com/photos/33714512/pexels-photo-33714512.jpeg?auto=compress&cs=tinysrgb&w=800&q=80" alt="Young man in vibrant bright traditional Nigerian attire, confident stance" class="w-full h-full object-cover object-top">
+        <div class="gallery-overlay"><div><p class="text-gold text-xs uppercase tracking-widest">Category</p><p class="text-ivory font-display text-xl">Senator / Native</p></div></div>
+      </div>
+      <!-- 10 Gold attire -->
+      <div class="gallery-item h-72">
+        <img src="https://images.pexels.com/photos/14848728/pexels-photo-14848728.jpeg?auto=compress&cs=tinysrgb&w=800&q=80" alt="Nigerian woman in gold traditional attire, smiling" class="w-full h-full object-cover object-top">
+        <div class="gallery-overlay"><div><p class="text-gold text-xs uppercase tracking-widest">Category</p><p class="text-ivory font-display text-xl">Gold Lace</p></div></div>
+      </div>
+      <!-- 11 Intricate patterns -->
+      <div class="gallery-item h-72">
+        <img src="https://images.pexels.com/photos/34417794/pexels-photo-34417794.jpeg?auto=compress&cs=tinysrgb&w=800&q=80" alt="Portrait of a Nigerian woman in traditional dress with intricate patterns" class="w-full h-full object-cover object-top">
+        <div class="gallery-overlay"><div><p class="text-gold text-xs uppercase tracking-widest">Category</p><p class="text-ivory font-display text-xl">Lace & Brocade</p></div></div>
+      </div>
+      <!-- 12 Headwrap / Gele -->
+      <div class="gallery-item h-72">
+        <img src="https://images.pexels.com/photos/31951217/pexels-photo-31951217.jpeg?auto=compress&cs=tinysrgb&w=800&q=80" alt="Elegant African woman in traditional attire with jewelry and Gele head wrap" class="w-full h-full object-cover object-top">
+        <div class="gallery-overlay"><div><p class="text-gold text-xs uppercase tracking-widest">Accessory</p><p class="text-ivory font-display text-xl">Gele</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STYLES / SERVICES -->
+<section id="styles" class="py-24 md:py-32 bg-ivory">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="text-center mb-16">
+      <p class="stitch-divider text-gold text-xs uppercase tracking-[0.3em] mb-3 max-w-xs mx-auto">
+        <span class="px-3">What We Make</span>
+      </p>
+      <h2 class="font-display text-4xl md:text-5xl text-royal">A Style For Every Story</h2>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-8">
+      <div class="text-center px-2">
+        <div class="w-16 h-16 mx-auto rounded-full border border-gold flex items-center justify-center mb-5">
+          <span class="font-display text-2xl text-gold">B</span>
+        </div>
+        <h3 class="font-display text-2xl text-royal mb-2">Blouses</h3>
+        <p class="text-sm text-charcoal/70">Fitted tops tailored from bust to sleeve — Ankara, lace or plain fabric.</p>
+      </div>
+      <div class="text-center px-2">
+        <div class="w-16 h-16 mx-auto rounded-full border border-gold flex items-center justify-center mb-5">
+          <span class="font-display text-2xl text-gold">G</span>
+        </div>
+        <h3 class="font-display text-2xl text-royal mb-2">Gowns</h3>
+        <p class="text-sm text-charcoal/70">Statement pieces for owambe, weddings, galas and traditional ceremonies.</p>
+      </div>
+      <div class="text-center px-2">
+        <div class="w-16 h-16 mx-auto rounded-full border border-gold flex items-center justify-center mb-5">
+          <span class="font-display text-2xl text-gold">A</span>
+        </div>
+        <h3 class="font-display text-2xl text-royal mb-2">Agbada</h3>
+        <p class="text-sm text-charcoal/70">Flowing Yoruba robes in Aso Oke, brocade or Ankara — for kings & grooms.</p>
+      </div>
+      <div class="text-center px-2">
+        <div class="w-16 h-16 mx-auto rounded-full border border-gold flex items-center justify-center mb-5">
+          <span class="font-display text-2xl text-gold">C</span>
+        </div>
+        <h3 class="font-display text-2xl text-royal mb-2">Corporate</h3>
+        <p class="text-sm text-charcoal/70">Sharp office and senator wear — trousers, pencil skirts, tailored suits.</p>
+      </div>
+      <div class="text-center px-2">
+        <div class="w-16 h-16 mx-auto rounded-full border border-gold flex items-center justify-center mb-5">
+          <span class="font-display text-2xl text-gold">K</span>
+        </div>
+        <h3 class="font-display text-2xl text-royal mb-2">Kids' Gowns</h3>
+        <p class="text-sm text-charcoal/70">Colourful Ankara & lace gowns for children — christenings, naming & parties.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KIDS GOWNS FEATURE -->
+<section class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 grid md:grid-cols-2 gap-12 items-center">
+    <div>
+      <p class="stitch-divider text-gold text-xs uppercase tracking-[0.3em] mb-3 max-w-xs">
+        <span class="px-3">Little Royals</span>
+      </p>
+      <h2 class="font-display text-4xl md:text-5xl text-royal leading-tight mb-5">Kids' Gowns & Ankara Sets</h2>
+      <p class="text-charcoal/80 leading-relaxed mb-5">
+        Your little ones deserve their royal moment too. We craft Ankara gowns, lace sets, mini agbadas and native outfits for children — perfectly sized for naming ceremonies, christenings, owambe parties, and school cultural days.
+      </p>
+      <p class="text-charcoal/80 leading-relaxed mb-8">
+        Match mummy and me sets, family Aso Ebi for children, or a one-of-a-kind look designed from scratch — every stitch is made with love.
+      </p>
+      <a href="/order" class="inline-block bg-royal text-ivory font-semibold uppercase tracking-wider text-sm px-8 py-3 hover:bg-gold hover:text-royal transition-colors duration-300">Order for Your Little One</a>
+    </div>
+    <div class="grid grid-cols-2 gap-3">
+      <div class="gallery-item h-60 rounded-sm overflow-hidden">
+        <img src="https://images.pexels.com/photos/32315554/pexels-photo-32315554.jpeg?auto=compress&cs=tinysrgb&w=600&q=80"
+             alt="Adorable young African girl in a pink lace dress outdoors, natural setting"
+             class="w-full h-full object-cover object-top">
+        <div class="gallery-overlay"></div>
+      </div>
+      <div class="gallery-item h-60 rounded-sm overflow-hidden">
+        <img src="https://images.pexels.com/photos/34098594/pexels-photo-34098594.jpeg?auto=compress&cs=tinysrgb&w=600&q=80"
+             alt="Joyful young African girl in a white dress, smiling confidently with flowers"
+             class="w-full h-full object-cover object-top">
+        <div class="gallery-overlay"></div>
+      </div>
+      <div class="gallery-item h-60 rounded-sm overflow-hidden col-span-2">
+        <img src="https://images.pexels.com/photos/31589058/pexels-photo-31589058.jpeg?auto=compress&cs=tinysrgb&w=900&q=80"
+             alt="Charming African girl in a sparkling pink sequined ball dress, glowing with joy"
+             class="w-full h-full object-cover object-center">
+        <div class="gallery-overlay"><div class="w-full"><p class="text-gold text-xs uppercase tracking-widest">Signature Style</p><p class="text-ivory font-display text-xl">Princess Ball Gowns for Little Royals</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="py-20 bg-ivory">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="text-center mb-14">
+      <p class="stitch-divider text-gold text-xs uppercase tracking-[0.3em] mb-3 max-w-xs mx-auto"><span class="px-3">What Clients Say</span></p>
+      <h2 class="font-display text-4xl md:text-5xl text-royal">Sewn With Love. Worn With Pride.</h2>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="bg-white border border-gold/20 p-8 relative">
+        <span class="font-display text-6xl text-gold/30 absolute top-4 left-6 leading-none">"</span>
+        <p class="text-charcoal/80 text-sm leading-relaxed mt-6">My Aso Ebi blouse and skirt were absolutely perfect. Every measurement was spot-on and the fabric drape was just divine. I got so many compliments at the wedding!</p>
+        <div class="mt-6 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-royal flex items-center justify-center text-ivory font-display text-lg">A</div>
+          <div><p class="font-semibold text-sm text-charcoal">Adaeze Okafor</p><p class="text-xs text-charcoal/50">Bodija, Ibadan, Nigeria</p></div>
+        </div>
+      </div>
+      <div class="bg-white border border-gold/20 p-8 relative">
+        <span class="font-display text-6xl text-gold/30 absolute top-4 left-6 leading-none">"</span>
+        <p class="text-charcoal/80 text-sm leading-relaxed mt-6">I ordered my son's Agbada and my daughter's gown for their naming ceremony. Royal Tee Stitches delivered magic — they looked like royalty!</p>
+        <div class="mt-6 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-gold flex items-center justify-center text-royal font-display text-lg">F</div>
+          <div><p class="font-semibold text-sm text-charcoal">Funke Adeleke</p><p class="text-xs text-charcoal/50">Ibadan, Oyo State</p></div>
+        </div>
+      </div>
+      <div class="bg-white border border-gold/20 p-8 relative">
+        <span class="font-display text-6xl text-gold/30 absolute top-4 left-6 leading-none">"</span>
+        <p class="text-charcoal/80 text-sm leading-relaxed mt-6">The corporate skirt suit they made for me is the most comfortable and well-fitted piece I've ever owned. I wear it every Monday — it's my power outfit!</p>
+        <div class="mt-6 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-royal/70 flex items-center justify-center text-ivory font-display text-lg">C</div>
+          <div><p class="font-semibold text-sm text-charcoal">Chioma Eze</p><p class="text-xs text-charcoal/50">Abuja, FCT</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="relative py-28 overflow-hidden">
+  <img src="https://images.pexels.com/photos/31826865/pexels-photo-31826865.jpeg?auto=compress&cs=tinysrgb&w=1920&q=80"
+       alt="Nigerian woman in vibrant traditional dress" class="absolute inset-0 w-full h-full object-cover object-top">
+  <div class="absolute inset-0 bg-royal-dark/85"></div>
+  <div class="relative z-10 max-w-3xl mx-auto text-center px-6">
+    <h2 class="font-display text-4xl md:text-5xl text-ivory mb-6">Ready for a Fit That's Truly Yours?</h2>
+    <p class="text-ivory/80 mb-10">Share your measurements and style inspiration — our master tailors will handle the rest.</p>
+    <a href="/order" class="inline-flex items-center bg-gold text-royal-dark font-semibold uppercase tracking-wider text-sm px-10 py-4 hover:bg-ivory transition-colors duration-300">
+      Place an Order
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-royal-dark text-ivory/70 py-14">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 flex flex-col md:flex-row justify-between gap-8">
+    <div>
+      <p class="font-display text-2xl text-ivory">Royal Tee <span class="text-gold">Stitches</span></p>
+      <p class="text-sm mt-2 max-w-xs">Bespoke Nigerian fashion, tailored to perfection — Bodija, Ibadan, Nigeria.</p>
+    </div>
+    <div class="text-sm space-y-2">
+      <p>oladokuntaiye26@gmail.com</p>
+      <p>Mon – Sat · 9am – 6pm WAT</p>
+    </div>
+  </div>
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 mt-10 pt-6 border-t border-ivory/10 text-xs text-ivory/40">
+    © 2026 Royal Tee Stitches. All rights reserved.
+  </div>
+</footer>
+
+<script>
+  document.getElementById('menuBtn').addEventListener('click', () => {
+    document.getElementById('mobileMenu').classList.toggle('hidden');
+  });
+</script>
+</body>
+</html>
